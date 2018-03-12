@@ -1,6 +1,7 @@
 from flask import Flask, jsonify, request
 app = Flask(__name__)
 
+
 @app.route("/api/heart_rate", methods=["POST"])
 def heart_rate_post():
     pass
