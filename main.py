@@ -19,10 +19,29 @@ def create_user(email, age=None, hr=None):
 
 
 def print_user(email):
-    user = models.User.objects.raw({"_id": "suyash@suyashkumar.com"}).first()
+    user = models.User.objects.raw({"_id": email}).first()
     print(user.email)
     print(user.heart_rate)
     print(user.heart_rate_times)
+
+
+def user_dict(email):
+    user = models.User.objects.raw({"_id": email}).first()
+    vals = {
+            "user_email": user.email,
+            "user_age": user.age,
+            "heart_rates": user.heart_rate,
+            "heart_rate_times": user.heart_rate_times
+            }
+    return vals
+
+
+def user_heart_rates(email):
+    if already_user(email):
+        user = models.User.objects.raw({"_id": email}).first()
+    else:
+        return None
+    return user.heart_rate
 
 
 def already_user(email):
@@ -38,5 +57,5 @@ if __name__ == "__main__":
     if already_user("suyash@suyashkumar.com"):
         add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
     else:
-        create_user()
+        create_user("suyash@suyashkumar.com")
     print_user("suyash@suyashkumar.com")
