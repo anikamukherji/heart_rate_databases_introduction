@@ -4,16 +4,17 @@ import datetime
 
 
 def add_heart_rate(email, heart_rate, time):
-    user = models.User.objects.raw({"_id": "suyash@suyashkumar.com"}).first()
+    user = models.User.objects.raw({"_id": email}).first()
     user.heart_rate.append(heart_rate)
     user.heart_rate_times.append(time)
     user.save()
 
 
-def create_user():
-    u = models.User("suyash@suyashkumar.com", 24, [], [])
-    u.heart_rate.append(60)
-    u.heart_rate_times.append(datetime.datetime.now())
+def create_user(email, age=None, hr=None):
+    u = models.User(email, age, [], [])
+    if hr:
+        u.heart_rate.append(hr)
+        u.heart_rate_times.append(datetime.datetime.now())
     u.save()
 
 
@@ -24,8 +25,18 @@ def print_user(email):
     print(user.heart_rate_times)
 
 
+def already_user(email):
+    try:
+        user = models.User.objects.raw({"_id": email}).first()
+    except:
+        return False
+    return True
+
+
 if __name__ == "__main__":
     connect("mongodb://localhost:27017/heart_rate_app")
-    # create_user()
-    add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
+    if already_user("suyash@suyashkumar.com"):
+        add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
+    else:
+        create_user()
     print_user("suyash@suyashkumar.com")
