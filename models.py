@@ -12,18 +12,21 @@ class User(MongoModel):
     def vals(self):
         """
         Returns dictionary of attributes for object
+
+        :return: dictionary of attributes
+        :rtype: dict
         """
         vals = {
-        "user_email": self.email,
-        "user_age": self.age,
-        "heart_rates": self.heart_rate,
-        "heart_rate_times": self.heart_rate_times
-        }
+            "user_email": self.email,
+            "user_age": self.age,
+            "heart_rates": self.heart_rate,
+            "heart_rate_times": self.heart_rate_times
+            }
         return vals
 
     def average_hr(self, since_time=None):
         """
-        Returns average of all stored heart rates for user 
+        Returns average of all stored heart rates for user
         since some time if given
 
         :return: average heart rate
@@ -40,4 +43,3 @@ class User(MongoModel):
             for r in hr:
                 continue
         return np.average(hr)
-

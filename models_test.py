@@ -1,16 +1,12 @@
-from pymodm import connect
-from models import User
-from main import *
-import datetime
-
-
 def test_user():
     """
     Tests User object initialization
     """
     try:
+        from pymodm import connect
+        from main import create_user, already_user
         import pytest
-        from models import User 
+        import models
     except ImportError as e:
         print("Necessary import failed: {}".format(e))
         return
@@ -27,8 +23,11 @@ def test_average_hr():
     Tests User object average_hr function
     """
     try:
+        from pymodm import connect
+        from main import create_user, add_heart_rate
         import pytest
-        from models import User 
+        import datetime
+        import models
     except ImportError as e:
         print("Necessary import failed: {}".format(e))
         return
@@ -37,6 +36,6 @@ def test_average_hr():
     u = models.User.objects.raw({"_id": "test1@test.test"}).first()
     assert u.average_hr() == 1.0
     add_heart_rate("test1@test.test", heart_rate=3,
-                    time=datetime.datetime.now())
+                   time=datetime.datetime.now())
     u = models.User.objects.raw({"_id": "test1@test.test"}).first()
     assert u.average_hr() == 2.0
