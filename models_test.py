@@ -34,8 +34,9 @@ def test_average_hr():
         return
     connect("mongodb://localhost:27017/heart_rate_app")
     create_user("test1@test.test", age=0, hr=1)
-    u = models.User.objects.raw({"_id": "test@test.test"}).first()
-    assert u.average_hr() == 1
+    u = models.User.objects.raw({"_id": "test1@test.test"}).first()
+    assert u.average_hr() == 1.0
     add_heart_rate("test1@test.test", heart_rate=3,
                     time=datetime.datetime.now())
+    u = models.User.objects.raw({"_id": "test1@test.test"}).first()
     assert u.average_hr() == 2.0

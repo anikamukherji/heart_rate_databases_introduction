@@ -23,10 +23,10 @@ def heart_rate_post():
         d = {"error": "Incorrect JSON input"}
         return jsonify(d), 400
     if already_user(email):
-        add_heart_rate(email, heart_rate=hr, time=datetime.datetime.now())
+        u_vals = add_heart_rate(email, heart_rate=hr,
+                                time=datetime.datetime.now())
     else:
-        create_user(email, age=age, hr=hr)
-    u_vals = user_dict(email)
+        u_vals = create_user(email, age=age, hr=hr)
     logging.debug("adding hr to user: {}".format(u_vals))
     return jsonify(u_vals), 200
 
