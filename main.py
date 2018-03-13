@@ -12,7 +12,7 @@ def add_heart_rate(email, heart_rate, time):
 
 def create_user(email, age=None, hr=None):
     u = models.User(email, age, [], [])
-    if hr:
+    if hr is None:
         u.heart_rate.append(hr)
         u.heart_rate_times.append(datetime.datetime.now())
     u.save()
@@ -36,7 +36,7 @@ def user_dict(email):
     return vals
 
 
-def user_heart_rates(email):
+def get_heart_rates(email):
     if already_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     else:
@@ -45,11 +45,7 @@ def user_heart_rates(email):
 
 
 def already_user(email):
-    try:
-        user = models.User.objects.raw({"_id": email}).first()
-    except:
-        return False
-    return True
+    return models.User.objects.raw({"_id": email}).count() > 0
 
 
 if __name__ == "__main__":

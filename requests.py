@@ -20,7 +20,8 @@ def heart_rate_post():
         hr = r["heart_rate"]
     except KeyError as e:
         logging.warning("Incorrect JSON input: {}".format(e))
-        return
+        d = {"error": "Incorrect JSON input"}
+        return jsonify(d), 400
     if already_user(email):
         add_heart_rate(email, heart_rate=hr, time=datetime.datetime.now())
     else:
@@ -38,10 +39,11 @@ def heart_rate_get():
     :return: all heart rates for user
     :rtype: dict
     """
-    heart_rates = user_heart_rates(user_email)
+    heart_rates = get_heart_rates(user_email)
     if heart_rates is None:
         logging.warning("User with email does not exist".format(user_email))
-        return
+        d = {"error": "User with email does not exist"}
+        return jsonify(d), 400
     return jsonify(heart_rates)
 
 
