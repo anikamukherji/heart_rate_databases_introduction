@@ -38,8 +38,11 @@ class User(MongoModel):
             print("Necessary import failed: {}".format(e))
             return None
         hr = np.array(self.heart_rate)
-        if since_time is None:
-            # logic to create new array with only relevant data
-            for r in hr:
-                continue
+        if since_time is not None:
+            hr_adjusted = np.array([])
+            for index, rate in enumerate(hr):
+                t = self.heart_rate_times[index]
+                if t >= since_time:
+                    hr_adjusted = np.append(hr_adjusted, rate)
+            return np.average(hr_adjusted)
         return np.average(hr)
