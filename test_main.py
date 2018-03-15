@@ -36,11 +36,11 @@ def test_create_user():
         print("Necessary import failed: {}".format(e))
         return
     connect("mongodb://localhost:27017/heart_rate_app")
-    vals = create_user("test@test.test", age=5, age_units="week", hr=1)
+    vals = create_user("test@test.test", age=5, age_units="month", hr=1)
     u = models.User.objects.raw({"_id": "test@test.test"}).first()
     assert u.email == "test@test.test"
     assert u.age == 5
-    assert u.age_units == "week"
+    assert u.age_units == "month"
     assert u.heart_rate == [1]
     assert len(u.heart_rate_times) == 1
     assert u.email == vals["user_email"]

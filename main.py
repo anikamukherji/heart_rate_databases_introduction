@@ -46,6 +46,7 @@ def create_user(email, age=None, age_units="year", hr=None):
     if hr is not None:
         u.heart_rate.append(hr)
         u.heart_rate_times.append(datetime.datetime.now())
+    u.adjust_age()
     u.save()
     return u.vals()
 
