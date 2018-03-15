@@ -4,16 +4,46 @@ def test_add_heart_rate():
     """
     try:
         from pymodm import connect
-        from main import create_user, already_user
+        from main import add_heart_rate
         import pytest
         import models
+        import datetime
+    except ImportError as e:
+        print("Necessary import failed: {}".format(e))
+        return
+    d = datetime.datetime.now()
+    connect("mongodb://localhost:27017/heart_rate_app")
+    u = models.User("test@test.test", age=0, heart_rate=[1],
+                    heart_rate_times=[d])
+    u.save()
+    u = models.User.objects.raw({"_id": "test@test.test"}).first()
+    ret = add_heart_rate("test@test.test", heart_rate=4, time=d)
+    assert ret["user_email"] == "test@test.test"
+    assert ret["user_age"] == 0
+    assert ret["heart_rates"] == [1, 4]
+    assert len(ret["heart_rate_times"]) == 2
+
+
+def test_create_user():
+    try:
+        from pymodm import connect
+        from main import create_user
+        import pytest
+        import models
+        import datetime
     except ImportError as e:
         print("Necessary import failed: {}".format(e))
         return
     connect("mongodb://localhost:27017/heart_rate_app")
-    create_user("test@test.test", age=0, hr=1)
-    assert already_user("test@test.test") is True
+    vals = create_user("test@test.test", age=0, hr=1)
     u = models.User.objects.raw({"_id": "test@test.test"}).first()
+    assert u.email == "test@test.test"
+    assert u.age == 0
+    assert u.heart_rate == [1]
+    assert len(u.heart_rate_times) == 1
+    assert u.email == vals["user_email"]
+    assert u.age == vals["user_age"]
+    assert u.heart_rate == vals["heart_rates"]
 
 
 def test_get_av_hr():
@@ -22,7 +52,8 @@ def test_get_av_hr():
     """
     try:
         from pymodm import connect
-        from main import create_user, add_heart_rate, get_av_hr
+        from main import add_heart_rate, get_av_hr
+        import models
         import pytest
         import datetime
         import time
@@ -30,7 +61,9 @@ def test_get_av_hr():
         print("Necessary import failed: {}".format(e))
         return
     connect("mongodb://localhost:27017/heart_rate_app")
-    create_user("test1@test.test", age=0, hr=1)
+    u = models.User("test1@test.test", age=0, heart_rate=[1],
+                    heart_rate_times=[datetime.datetime.now()])
+    u.save()
     assert get_av_hr("test1@test.test") == 1.0
     add_heart_rate("test1@test.test", heart_rate=3,
                    time=datetime.datetime.now())
