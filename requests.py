@@ -44,7 +44,7 @@ def heart_rate_get():
         logging.warning("User with email does not exist".format(user_email))
         d = {"error": "User with email does not exist"}
         return jsonify(d), 400
-    return jsonify(heart_rates)
+    return jsonify(heart_rates), 200
 
 
 @app.route("/api/heart_rate/average/<user_email>", methods=["GET"])
@@ -55,8 +55,21 @@ def heart_rate_average():
     :return: average heart rate
     :rtype: dict
     """
-    # return jsonify(average_hr)
-    pass
+    r = request.get_json()
+    try:
+        email = r["user_email"]
+    except KeyError as e:
+        logging.warning("Incorrect JSON input: {}".format(e))
+        d = {"error": "Incorrect JSON input"}
+        return jsonify(d), 400
+    av = get_av_hr(email)
+    if av is None:
+        logging.error("get_av_hr returned None. "
+                      "User may not yet exist")
+    average_hr = {"heart_rate_average": av}
+    logging.debug("Returning average heart rate for {}: {}".format(email,
+                  av))
+    return jsonify(average_hr), 200
 
 
 @app.route("/api/heart_rate/interval_average", methods=["POST"])
@@ -67,5 +80,19 @@ def heart_rate_interval_average():
     :return: average heart rate over interval
     :rtype: dict
     """
-    # return jsonify(average_hr)
-    pass
+    r = request.get_json()
+    try:
+        email = r["user_email"]
+        interval_start = r["heart_rate_average_since"]
+    except KeyError as e:
+        logging.warning("Incorrect JSON input: {}".format(e))
+        d = {"error": "Incorrect JSON input"}
+        return jsonify(d), 400
+    av = get_av_hr(email, since_time=interval_start)
+    if av is None:
+        logging.error("get_av_hr returned None. "
+                      "User may not yet exist")
+    average_hr = {"heart_rate_average": av}
+    logging.debug("Returning average heart rate for {} since {}"
+                  ": {}".format(email, interval_start, av))
+    return jsonify(average_hr), 200

@@ -7,6 +7,9 @@ def add_heart_rate(email, heart_rate, time):
     """
     Takes in email of existing user and appends given
     heart rate and time to respective attributes
+
+    :return: dict of user vals
+    :rtype: dict
     """
     user = models.User.objects.raw({"_id": email}).first()
     user.heart_rate.append(heart_rate)
@@ -19,6 +22,9 @@ def create_user(email, age=None, hr=None):
     """
     Takes in email of new user, creates new user object, and appends given
     heart rate and current time to respective attributes
+
+    :return: dict of new user vals
+    :rtype: dict
     """
     u = models.User(email, age, [], [])
     if hr is not None:
@@ -39,6 +45,14 @@ def print_user(email):
 
 
 def get_heart_rates(email):
+    """
+    Returns all heart rates for user if user exists
+
+    :return: list of heart rates
+    :rtype: list
+    :return: None if user does not exist
+    :rtype: NoneType
+    """
     if already_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     else:
@@ -47,7 +61,30 @@ def get_heart_rates(email):
 
 
 def already_user(email):
+    """
+    Returns whether user has already been created
+
+    :returns: if user with email already exists
+    :rtype: boolean
+    """
     return models.User.objects.raw({"_id": email}).count() > 0
+
+
+def get_av_hr(email, since_time=None):
+    """
+    Returns average heart rate of user with given email
+    since some time if provided
+
+    :return: average heart rate
+    :rtype: float
+    :return: None if user does not exist
+    :rtype: NoneType
+    """
+    if already_user(email):
+        user = models.User.objects.raw({"_id": email}).first()
+    else:
+        return None
+    return user.average_hr(since_time=since_time)
 
 
 if __name__ == "__main__":
