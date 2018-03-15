@@ -105,7 +105,6 @@ def test_already_user():
     assert already_user("doesexist@test.test") is True
 
 
-
 def test_get_av_hr():
     """
     Test main.get_av_hr function
