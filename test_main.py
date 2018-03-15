@@ -13,13 +13,14 @@ def test_add_heart_rate():
         return
     d = datetime.datetime.now()
     connect("mongodb://localhost:27017/heart_rate_app")
-    u = models.User("test@test.test", age=0, heart_rate=[1],
+    u = models.User("test@test.test", age=0, age_units="year", heart_rate=[1],
                     heart_rate_times=[d])
     u.save()
     u = models.User.objects.raw({"_id": "test@test.test"}).first()
     ret = add_heart_rate("test@test.test", heart_rate=4, time=d)
     assert ret["user_email"] == "test@test.test"
     assert ret["user_age"] == 0
+    assert ret["age_units"] == "year"
     assert ret["heart_rates"] == [1, 4]
     assert len(ret["heart_rate_times"]) == 2
 
@@ -35,14 +36,16 @@ def test_create_user():
         print("Necessary import failed: {}".format(e))
         return
     connect("mongodb://localhost:27017/heart_rate_app")
-    vals = create_user("test@test.test", age=0, hr=1)
+    vals = create_user("test@test.test", age=5, age_units="month", hr=1)
     u = models.User.objects.raw({"_id": "test@test.test"}).first()
     assert u.email == "test@test.test"
-    assert u.age == 0
+    assert u.age == 5
+    assert u.age_units == "month"
     assert u.heart_rate == [1]
     assert len(u.heart_rate_times) == 1
     assert u.email == vals["user_email"]
     assert u.age == vals["user_age"]
+    assert u.age_units == vals["age_units"]
     assert u.heart_rate == vals["heart_rates"]
 
 
@@ -120,21 +123,26 @@ def test_get_av_hr():
         print("Necessary import failed: {}".format(e))
         return
     connect("mongodb://localhost:27017/heart_rate_app")
-    u = models.User("test1@test.test", age=0, heart_rate=[1],
+    u = models.User("test1@test.test", age=0, age_units="day", heart_rate=[1],
                     heart_rate_times=[datetime.datetime.now()])
     u.save()
-    assert get_av_hr("test1@test.test") == 1.0
+    ret = get_av_hr("test1@test.test")
+    assert ret[0] == 1.0
     add_heart_rate("test1@test.test", heart_rate=3,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test") == 2.0
+    ret = get_av_hr("test1@test.test")
+    assert ret[0] == 2.0
     d = datetime.datetime.today()
     time.sleep(3)
     add_heart_rate("test1@test.test", heart_rate=3,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test", since_time=d) == 3.0
+    ret = get_av_hr("test1@test.test", since_time=d)
+    assert ret[0] == 3.0
     add_heart_rate("test1@test.test", heart_rate=2,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test", since_time=d) == 2.5
+    ret = get_av_hr("test1@test.test", since_time=d)
+    assert ret[0] == 2.5
     add_heart_rate("test1@test.test", heart_rate=1,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test", since_time=d) == 2.0
+    ret = get_av_hr("test1@test.test", since_time=d)
+    assert ret[0] == 2.0

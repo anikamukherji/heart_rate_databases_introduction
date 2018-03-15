@@ -62,13 +62,18 @@ def heart_rate_average():
         logging.warning("Incorrect JSON input: {}".format(e))
         d = {"error": "Incorrect JSON input"}
         return jsonify(d), 400
-    av = get_av_hr(email)
+    av, is_tachycardic = get_av_hr(email)
     if av is None:
         logging.error("get_av_hr returned None. "
                       "User may not yet exist")
-    average_hr = {"heart_rate_average": av}
+    average_hr = {
+                  "heart_rate_average": av,
+                  "is_tachycardic": is_tachycardic
+                 }
     logging.debug("Returning average heart rate for {}: {}".format(email,
                   av))
+    logging.dubug("This heart rate is tachycardic for"
+                  "this user:".format(is_tachycardic))
     return jsonify(average_hr), 200
 
 
@@ -88,11 +93,16 @@ def heart_rate_interval_average():
         logging.warning("Incorrect JSON input: {}".format(e))
         d = {"error": "Incorrect JSON input"}
         return jsonify(d), 400
-    av = get_av_hr(email, since_time=interval_start)
+    av, is_tachycardic = get_av_hr(email, since_time=interval_start)
     if av is None:
         logging.error("get_av_hr returned None. "
                       "User may not yet exist")
-    average_hr = {"heart_rate_average": av}
+    average_hr = {
+                  "heart_rate_average": av,
+                  "is_tachycardic": is_tachycardic
+                 }
     logging.debug("Returning average heart rate for {} since {}"
                   ": {}".format(email, interval_start, av))
+    logging.dubug("This heart rate is tachycardic for"
+                  "this user:".format(is_tachycardic))
     return jsonify(average_hr), 200
