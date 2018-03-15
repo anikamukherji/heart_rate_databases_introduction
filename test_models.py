@@ -79,3 +79,8 @@ def test_adjust_age():
     u.adjust_age()
     assert u.age == 15
     assert u.age_units == "year"
+    invalid_units = ["second", 10, "invalid"]
+    for i in invalid_units:
+        with pytest.raises(ValueError):
+            u.age_units = i
+            u.adjust_age()
