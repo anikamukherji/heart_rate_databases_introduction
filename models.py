@@ -57,30 +57,43 @@ class User(MongoModel):
             if self.age < 7:
                 return
             elif self.age < 30:
-                self.age = self.age%7
+                self.age = self.age % 7
                 self.age_units = "week"
             elif self.age < 365:
-                self.age = self.age%30
+                self.age = self.age % 30
                 self.age_units = "month"
             else:
-                self.age = self.age%365
+                self.age = self.age % 365
                 self.age_units = "year"
         elif self.age_units == "week":
             if self.age < 4:
                 return
             elif self.age < 52:
-                self.age = self.age%4
+                self.age = self.age % 4
                 self.age_units = "month"
             else:
-                self.age = self.age%52
+                self.age = self.age % 52
                 self.age_units = "year"
         elif self.age_units == "month":
             if self.age < 12:
                 return
             else:
-                self.age = self.age%12
+                self.age = self.age % 12
                 self.age_units = "year"
 
+    def is_tachycardic(self, hr):
+        """
+        Compares given heart rate to calculated tachycardia
+        range based on age of user
+
+        :param hr: heart rate to assess
+        :type hr: float
+
+        :return: if heart rate is considered tachycardic
+        :rtype: boolean
+        """
+        lower_bound = self.tachycardic_range()
+        return hr > lower_bound
 
     def tachycardic_range(self):
         """
@@ -89,4 +102,31 @@ class User(MongoModel):
         :return: lower bound for tachycardia
         :rtype: int
         """
-        pass
+        self.adjust_age()
+        if self.age_units == "day":
+            if self.age <= 2:
+                return 159
+            elif self.age <= 6:
+                return 166
+        elif self.age_units == "week":
+            return 182
+        elif self.age_units == "month":
+            if self.age <= 2:
+                return 179
+            elif self.age <= 5:
+                return 186
+            elif self.age <= 11:
+                return 169
+        elif self.age_units == "year":
+            if self.age <= 2:
+                return 151
+            elif self.age <= 4:
+                return 137
+            elif self.age <= 7:
+                return 133
+            elif self.age <= 11:
+                return 130
+            elif self.age <= 15:
+                return 119
+            elif self.age > 15:
+                return 100
