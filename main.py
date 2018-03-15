@@ -25,7 +25,7 @@ def add_heart_rate(email, heart_rate, time):
     return user.vals()
 
 
-def create_user(email, age=None, hr=None):
+def create_user(email, age=None, age_units="year", hr=None):
     """
     Takes in email of new user, creates new user object, and appends given
     heart rate and current time to respective attributes
@@ -34,13 +34,15 @@ def create_user(email, age=None, hr=None):
     :type email: string
     :param age: age of user
     :type age: int
+    :param age_units: units of time of given age (should be year, month, week)
+    :type age_units: string
     :param hr: current heart rate of user
     :type hr: int
 
     :return: dict of new user vals
     :rtype: dict
     """
-    u = models.User(email, age, [], [])
+    u = models.User(email, age, age_units, [], [])
     if hr is not None:
         u.heart_rate.append(hr)
         u.heart_rate_times.append(datetime.datetime.now())

@@ -6,6 +6,7 @@ class User(MongoModel):
     # query this field using the label_id
     email = fields.EmailField(primary_key=True)
     age = fields.IntegerField()
+    age_units = fields.CharField()
     heart_rate = fields.ListField(field=fields.IntegerField())
     heart_rate_times = fields.ListField(field=fields.DateTimeField())
 
@@ -19,6 +20,7 @@ class User(MongoModel):
         vals = {
             "user_email": self.email,
             "user_age": self.age,
+            "age_units": self.age_units,
             "heart_rates": self.heart_rate,
             "heart_rate_times": self.heart_rate_times
             }
