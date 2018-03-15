@@ -47,3 +47,35 @@ def test_average_hr():
     u.heart_rate += [1]
     u.heart_rate_times += [datetime.datetime.now()]
     assert u.average_hr(since_time=d2) == 2.0
+
+
+def test_adjust_age():
+    """
+    Tests User object average_hr function
+    """
+    try:
+        import pytest
+        import datetime
+        from models import User
+        import time
+    except ImportError as e:
+        print("Necessary import failed: {}".format(e))
+        return
+    d = datetime.datetime.now()
+    u = User("test@test.test", age=8, age_units="day",
+             heart_rate=[1], heart_rate_times=[d])
+    u.adjust_age()
+    assert u.age == 1
+    assert u.age_units == "week"
+    u.age = 13
+    u.adjust_age()
+    assert u.age == 3
+    assert u.age_units == "month"
+    u.age = 25
+    u.adjust_age()
+    assert u.age == 2
+    assert u.age_units == "year"
+    u.age = 15
+    u.adjust_age()
+    assert u.age == 15
+    assert u.age_units == "year"

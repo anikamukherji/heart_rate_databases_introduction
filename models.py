@@ -66,28 +66,28 @@ class User(MongoModel):
             if self.age < 7:
                 return
             elif self.age < 30:
-                self.age = self.age % 7
+                self.age = self.age//7
                 self.age_units = "week"
             elif self.age < 365:
-                self.age = self.age % 30
+                self.age = self.age//30
                 self.age_units = "month"
             else:
-                self.age = self.age % 365
+                self.age = self.age//365
                 self.age_units = "year"
         elif self.age_units == "week":
             if self.age < 4:
                 return
             elif self.age < 52:
-                self.age = self.age % 4
+                self.age = self.age//4
                 self.age_units = "month"
             else:
-                self.age = self.age % 52
+                self.age = self.age//52
                 self.age_units = "year"
         elif self.age_units == "month":
             if self.age < 12:
                 return
             else:
-                self.age = self.age % 12
+                self.age = self.age//12
                 self.age_units = "year"
 
     def is_tachycardic(self, hr):
