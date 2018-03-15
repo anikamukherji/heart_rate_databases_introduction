@@ -86,6 +86,26 @@ def test_get_heart_rates():
     assert get_heart_rates("doesexist@test.test") == [1, 2, 3]
 
 
+def test_already_user():
+    """
+    Tests main.already_user function
+    """
+    try:
+        from main import already_user
+        import models
+        import pytest
+        import datetime
+    except ImportError as e:
+        print("Necessary import failed: {}".format(e))
+        return
+    assert already_user("doesnotexist@test.test") is False
+    u = models.User("doesexist@test.test", age=0, heart_rate=[1, 2, 3],
+                    heart_rate_times=[datetime.datetime.now()])
+    u.save()
+    assert already_user("doesexist@test.test") is True
+
+
+
 def test_get_av_hr():
     """
     Test main.get_av_hr function
