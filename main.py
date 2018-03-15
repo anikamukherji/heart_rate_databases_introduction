@@ -8,6 +8,13 @@ def add_heart_rate(email, heart_rate, time):
     Takes in email of existing user and appends given
     heart rate and time to respective attributes
 
+    :param email: email of user
+    :type email: string
+    :param heart_rate: current heart rate of user
+    :type heart_rate: int
+    :param time: date/time heart rate was taken
+    :type time: datetime.date
+
     :return: dict of user vals
     :rtype: dict
     """
@@ -23,6 +30,13 @@ def create_user(email, age=None, hr=None):
     Takes in email of new user, creates new user object, and appends given
     heart rate and current time to respective attributes
 
+    :param email: email of user
+    :type email: string
+    :param age: age of user
+    :type age: int
+    :param hr: current heart rate of user
+    :type hr: int
+
     :return: dict of new user vals
     :rtype: dict
     """
@@ -37,7 +51,14 @@ def create_user(email, age=None, hr=None):
 def print_user(email):
     """
     Takes in email of new user and prints out all attributes
+
+    :param email: email of user
+    :type email: string
+    :raises: ValueError if user does not exist
     """
+    if not already_user(email):
+        print("User does not exist")
+        raise ValueError()
     user = models.User.objects.raw({"_id": email}).first()
     print(user.email)
     print(user.heart_rate)
@@ -48,21 +69,27 @@ def get_heart_rates(email):
     """
     Returns all heart rates for user if user exists
 
+    :param email: email of user
+    :type email: string
+    :raises: ValueError if user does not exist
+
     :return: list of heart rates
     :rtype: list
-    :return: None if user does not exist
-    :rtype: NoneType
     """
     if already_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     else:
-        return None
+        print("User does not exist")
+        raise ValueError()
     return user.heart_rate
 
 
 def already_user(email):
     """
     Returns whether user has already been created
+
+    :param email: email of user
+    :type email: string
 
     :returns: if user with email already exists
     :rtype: boolean
@@ -75,22 +102,18 @@ def get_av_hr(email, since_time=None):
     Returns average heart rate of user with given email
     since some time if provided
 
+    :param email: email of user
+    :type email: string
+    :param since_time: start date for calculating average heart rate
+    :type since_time: datetime.date
+    :raises: ValueError if user does not exist
+
     :return: average heart rate
     :rtype: float
-    :return: None if user does not exist
-    :rtype: NoneType
     """
     if already_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     else:
-        return None
+        print("User does not exist")
+        raise ValueError()
     return user.average_hr(since_time=since_time)
-
-
-if __name__ == "__main__":
-    connect("mongodb://localhost:27017/heart_rate_app")
-    if already_user("suyash@suyashkumar.com"):
-        add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
-    else:
-        create_user("suyash@suyashkumar.com")
-    print_user("suyash@suyashkumar.com")
