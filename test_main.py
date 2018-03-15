@@ -66,6 +66,26 @@ def test_print_user():
     assert print_user("doesexist@test.test") is None
 
 
+def test_get_heart_rates():
+    """
+    Tests main.get_heart_rates function
+    """
+    try:
+        from main import get_heart_rates
+        import models
+        import pytest
+        import datetime
+    except ImportError as e:
+        print("Necessary import failed: {}".format(e))
+        return
+    with pytest.raises(ValueError):
+        get_heart_rates("doesnotexist@test.test")
+    u = models.User("doesexist@test.test", age=0, heart_rate=[1, 2, 3],
+                    heart_rate_times=[datetime.datetime.now()])
+    u.save()
+    assert get_heart_rates("doesexist@test.test") == [1, 2, 3]
+
+
 def test_get_av_hr():
     """
     Test main.get_av_hr function

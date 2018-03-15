@@ -37,6 +37,8 @@ def create_user(email, age=None, hr=None):
 def print_user(email):
     """
     Takes in email of new user and prints out all attributes
+    
+    :raises: ValueError if user does not exist
     """
     if not already_user(email):
         print("User does not exist")
@@ -51,6 +53,8 @@ def get_heart_rates(email):
     """
     Returns all heart rates for user if user exists
 
+    :raises: ValueError if user does not exist
+
     :return: list of heart rates
     :rtype: list
     :return: None if user does not exist
@@ -59,7 +63,8 @@ def get_heart_rates(email):
     if already_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     else:
-        return None
+        print("User does not exist")
+        raise ValueError()
     return user.heart_rate
 
 
