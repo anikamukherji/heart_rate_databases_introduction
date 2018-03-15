@@ -38,6 +38,9 @@ def print_user(email):
     """
     Takes in email of new user and prints out all attributes
     """
+    if not already_user(email):
+        print("User does not exist")
+        raise ValueError()
     user = models.User.objects.raw({"_id": email}).first()
     print(user.email)
     print(user.heart_rate)

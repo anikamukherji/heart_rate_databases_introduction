@@ -46,6 +46,26 @@ def test_create_user():
     assert u.heart_rate == vals["heart_rates"]
 
 
+def test_print_user():
+    """
+    Test main.print_user function
+    """
+    try:
+        from main import print_user
+        import models
+        import pytest
+        import datetime
+    except ImportError as e:
+        print("Necessary import failed: {}".format(e))
+        return
+    with pytest.raises(ValueError):
+        print_user("doesnotexist@test.test")
+    u = models.User("doesexist@test.test", age=0, heart_rate=[1],
+                    heart_rate_times=[datetime.datetime.now()])
+    u.save()
+    assert print_user("doesexist@test.test") is None
+
+
 def test_get_av_hr():
     """
     Test main.get_av_hr function
