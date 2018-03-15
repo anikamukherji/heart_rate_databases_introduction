@@ -28,6 +28,7 @@ def test_average_hr():
         import pytest
         import datetime
         import models
+        import time
     except ImportError as e:
         print("Necessary import failed: {}".format(e))
         return
@@ -39,3 +40,17 @@ def test_average_hr():
                    time=datetime.datetime.now())
     u = models.User.objects.raw({"_id": "test1@test.test"}).first()
     assert u.average_hr() == 2.0
+    d = datetime.datetime.today()
+    time.sleep(3)
+    add_heart_rate("test1@test.test", heart_rate=3,
+                   time=datetime.datetime.now())
+    u = models.User.objects.raw({"_id": "test1@test.test"}).first()
+    assert u.average_hr(since_time=d) == 3.0
+    add_heart_rate("test1@test.test", heart_rate=2,
+                   time=datetime.datetime.now())
+    u = models.User.objects.raw({"_id": "test1@test.test"}).first()
+    assert u.average_hr(since_time=d) == 2.5
+    add_heart_rate("test1@test.test", heart_rate=1,
+                   time=datetime.datetime.now())
+    u = models.User.objects.raw({"_id": "test1@test.test"}).first()
+    assert u.average_hr(since_time=d) == 2.0
