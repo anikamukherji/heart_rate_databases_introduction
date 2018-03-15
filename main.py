@@ -111,12 +111,14 @@ def get_av_hr(email, since_time=None):
     :type since_time: datetime.date
     :raises: ValueError if user does not exist
 
-    :return: average heart rate
-    :rtype: float
+    :return: (average heart rate, is_tachycardic)
+    :rtype: tuple
     """
     if already_user(email):
         user = models.User.objects.raw({"_id": email}).first()
     else:
         print("User does not exist")
         raise ValueError()
-    return user.average_hr(since_time=since_time)
+    av = user.average_hr(since_time=since_time)
+    is_tachycardic = user.is_tachycardic(av)
+    return (av, is_tachycardic)

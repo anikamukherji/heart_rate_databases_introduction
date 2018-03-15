@@ -123,21 +123,26 @@ def test_get_av_hr():
         print("Necessary import failed: {}".format(e))
         return
     connect("mongodb://localhost:27017/heart_rate_app")
-    u = models.User("test1@test.test", age=0, heart_rate=[1],
+    u = models.User("test1@test.test", age=0, age_units="day", heart_rate=[1],
                     heart_rate_times=[datetime.datetime.now()])
     u.save()
-    assert get_av_hr("test1@test.test") == 1.0
+    ret = get_av_hr("test1@test.test")
+    assert ret[0] == 1.0
     add_heart_rate("test1@test.test", heart_rate=3,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test") == 2.0
+    ret = get_av_hr("test1@test.test")
+    assert ret[0] == 2.0
     d = datetime.datetime.today()
     time.sleep(3)
     add_heart_rate("test1@test.test", heart_rate=3,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test", since_time=d) == 3.0
+    ret = get_av_hr("test1@test.test", since_time=d)
+    assert ret[0] == 3.0
     add_heart_rate("test1@test.test", heart_rate=2,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test", since_time=d) == 2.5
+    ret = get_av_hr("test1@test.test", since_time=d)
+    assert ret[0] == 2.5
     add_heart_rate("test1@test.test", heart_rate=1,
                    time=datetime.datetime.now())
-    assert get_av_hr("test1@test.test", since_time=d) == 2.0
+    ret = get_av_hr("test1@test.test", since_time=d)
+    assert ret[0] == 2.0
