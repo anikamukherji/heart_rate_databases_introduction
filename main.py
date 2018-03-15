@@ -93,12 +93,3 @@ def get_av_hr(email, since_time=None):
     else:
         return None
     return user.average_hr(since_time=since_time)
-
-
-if __name__ == "__main__":
-    connect("mongodb://localhost:27017/heart_rate_app")
-    if already_user("suyash@suyashkumar.com"):
-        add_heart_rate("suyash@suyashkumar.com", 60, datetime.datetime.now())
-    else:
-        create_user("suyash@suyashkumar.com")
-    print_user("suyash@suyashkumar.com")
