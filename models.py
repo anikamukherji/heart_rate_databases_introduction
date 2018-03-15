@@ -51,8 +51,17 @@ class User(MongoModel):
 
     def adjust_age(self):
         """
-        Adjust age and age units to ranges
+        Adjust age and age units to fit analysis ranges
+
+        :raises: ValueError if supplied unit is not supported
         """
+        try:
+            from tools import valid_units
+        except ImportError as e:
+            print("Necessary import failed: {}".format(e))
+        if not valid_units(self.age_units):
+            print("Given unit is not supported: {}".format(self.age_units))
+            raise ValueError()
         if self.age_units == "day":
             if self.age < 7:
                 return
