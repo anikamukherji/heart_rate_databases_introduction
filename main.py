@@ -1,6 +1,7 @@
 from pymodm import connect
 import models
 import datetime
+connect("mongodb://localhost:27017/heart_rate_app")
 
 
 def add_heart_rate(email, heart_rate, time):
