@@ -16,3 +16,9 @@ Can run server locally with flask...
 FLASK_APP=server.py flask run
 ```
 For API examples, run `requests_test.py`
+
+Creating new user requires user email, age, and current heart rate
+
+Supports user ages of unit `day`, `week`, `month`, or `year`, but will default to `year`
+
+Determines if an average heart rate is tachycardic based on the most reliable of all sites, Wikipedia: <https://en.wikipedia.org/wiki/Tachycardia>
