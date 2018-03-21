@@ -1,6 +1,8 @@
 # Heart Rate Databases Introduction Assignment
 ## Anika Mukherji BME 590
 
+[![Build Status](https://travis-ci.org/anikamukherji/heart_rate_databases_introduction.svg?branch=master)](https://travis-ci.org/anikamukherji/heart_rate_databases_introduction)
+
 Simple API and database project for storing users, heart rates, and finding averages  using Flask and MongoDB
 
 Requires creating a virtual environment and then running...
