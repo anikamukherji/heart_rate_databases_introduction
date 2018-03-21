@@ -35,7 +35,7 @@ def create_user(email, age=None, age_units="year", hr=None):
     :type email: string
     :param age: age of user
     :type age: int
-    :param age_units: units of time of given age (should be year, month, week)
+    :param age_units: units of time of given age
     :type age_units: string
     :param hr: current heart rate of user
     :type hr: int
