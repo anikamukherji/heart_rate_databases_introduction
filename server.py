@@ -1,6 +1,7 @@
 from models import User
 from main import *
 import datetime
+import dateutil.parser
 from flask import Flask, jsonify, request
 import logging
 logging.basicConfig(filename='requests.log', filemode='w',
@@ -97,7 +98,8 @@ def heart_rate_interval_average():
     r = request.get_json()
     try:
         email = r["user_email"]
-        interval_start = r["heart_rate_average_since"]
+        interval_start_str = r["heart_rate_average_since"]
+        interval_start = dateutil.parser.parse(interval_start_str)
     except KeyError as e:
         logging.warning("Incorrect JSON input: {}".format(e))
         d = {"error": "Incorrect JSON input"}
@@ -108,10 +110,10 @@ def heart_rate_interval_average():
                       "User may not yet exist")
     average_hr = {
                   "heart_rate_average": av,
-                  "is_tachycardic": is_tachycardic
+                  "is_tachycardic": int(is_tachycardic)
                  }
     logging.debug("Returning average heart rate for {} since {}"
                   ": {}".format(email, interval_start, av))
-    logging.dubug("This heart rate is tachycardic for"
+    logging.debug("This heart rate is tachycardic for"
                   "this user:".format(is_tachycardic))
     return jsonify(average_hr), 200
