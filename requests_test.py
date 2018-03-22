@@ -5,10 +5,16 @@ import time
 
 if __name__ == "__main__":
     connect("mongodb://localhost:27017/heart_rate_app")
-    dict1 = {"user_email": "anika@anika.com", "user_age": 20,
-             "age_units": "week", "heart_rate": 65}
-    r = requests.post("http://localhost:5000/api/heart_rate", json=dict1)
-    print(r.json())
+    userdict1 = {"user_email": "anika@anika.com", "user_age": 20,
+                 "age_units": "week", "heart_rate": 65}
+    userdict2 = {"user_email": "anika2@anika.com", "user_age": 20,
+                 "heart_rate": 65}
+    u_r1 = requests.post("http://localhost:5000/api/heart_rate",
+                         json=userdict1)
+    u_r2 = requests.post("http://localhost:5000/api/heart_rate",
+                         json=userdict2)
+    print(u_r1.json())
+    print(u_r2.json())
     r2 = requests.get("http://localhost:5000/api/heart_rate/anika@anika.com")
     print(r2.json())
     d = datetime.datetime.now()
