@@ -3,10 +3,12 @@ from main import *
 import datetime
 import dateutil.parser
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 import logging
 logging.basicConfig(filename='requests.log', filemode='w',
                     level=logging.DEBUG)
 app = Flask(__name__)
+CORS(app)
 connect("mongodb://localhost:27017/heart_rate_app")
 
 
